@@ -1,0 +1,35 @@
+syntax = "proto3";
+package reports;
+
+option go_package = "/reports";
+
+message RequestMessage {
+  double gross_income = 1;
+  bool sickness_contribution = 2;
+}
+
+message ContributionMessage {
+  string name = 1;
+  double value = 2;
+  double base = 3;
+  double percentage = 4;
+}
+
+message ReportMessage {
+  string name = 1;
+  int64 number_of_working_hours = 2;
+  double gross_per_hour = 3;
+  double gross_income = 4;
+  double net_income = 5;
+  bool sickness_contribution = 6;
+  double base_for_calculation_of_contributions_paid_by_country = 7;
+  double base_for_calculation_of_contributions_paid_by_employer = 8;
+  double employer_total_cost = 9;
+  repeated ContributionMessage contribution_paid_by_country = 10;
+  repeated ContributionMessage contribution_paid_by_employee = 11;
+  repeated ContributionMessage contribution_paid_by_employer = 12;
+}
+
+service Greeter {
+  rpc GetReport (RequestMessage) returns (ReportMessage);
+}

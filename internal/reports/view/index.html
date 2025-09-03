@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{.Title}}</title>
+    <!-- Tailwind CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="bg-sky-50">
+<div class="container mx-auto mt-0 h-screen p-4">
+    <div class="mx-auto w-1/2 p-4 mt-4 bg-white rounded shadow-md">
+        <div>
+            <h2 class="text-3xl inline-block">{{ .Title }}</h2>
+            <p class="inline-block text-gray-500 text-xs font-mono">by Zuzua</p>
+        </div>
+
+        <div>
+            <form id="myForm" method="post" action="/views/reports">
+                <label for="textInput" class="block text-gray-500 text-sm mb-2">Oblicz składki</label>
+                <input
+                        type="number"
+                        id="textInput"
+                        name="grossIncome"
+                        placeholder="kwota btutto (zł)"
+                        value="{{ .ReportRequest.GrossIncome }}"
+                        class="w-full p-2 pl-2 text-m text-gray-700 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-600 focus:border-transparent"
+                />
+                <div class="mb-4">
+                    <input id="sicknessContribution" type="hidden" name="sicknessContribution" value="false">
+                    <input id="sicknessContribution2" type="checkbox" name="sicknessContribution" value="true"
+                           class="mr-2" {{if .ReportRequest.SicknessContribution }}checked{{end}}>
+                    <label for="sicknessContribution" class="text-gray-700 text-sm">Oblicz składkę chorobową
+                        (2,45%)</label>
+                </div>
+                <button id="submitButton" type="submit"
+                        class="py-2 px-6 bg-sky-400 hover:bg-sky-500 text-black rounded-lg text-lg transition duration-200 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-sky-400 focus:ring-opacity-50">
+                    Wyślij
+                </button>
+            </form>
+        </div>
+
+
+        <hr class="my-4 border-gray-300"/>
+
+        <div {{ if not .ReportResponse.Name }} hidden {{end}}>
+            <p class="text-3xl mb-2">Podsumowanie</p>
+            <div class="grid grid-cols-3 gap-2">
+                <p class="text-lg">Kwota na umowie (brutto):</p>
+                <p id="gross-income" class="text-lg justify-self-end">{{ add 1 2 }}</p>
+            </div>
+            <div class="grid grid-cols-3 gap-2">
+                <p class="text-lg">Na rękę dla niani:</p>
+                <p id="net-income" class="text-lg justify-self-end"></p>
+                <span
+                        class="tooltip flex items-center"
+                        data-tooltip="Kwota brutto - suma szystkich składek opłacanych przez nianie">
+              <i class="fas fa-info-circle ml-2 text-gray-400 hover:text-gray-600"></i>
+            </span>
+            </div>
+            <div class="grid grid-cols-3 gap-2">
+                <p class="text-lg">Całkowity koszt rodzica:</p>
+                <p id="employer-total-cost" class="text-lg justify-self-end"></p>
+                <span class="tooltip flex items-center" data-tooltip="Kwota wypłacona niani + wszystkie składki ZUS">
+                    <i class="fas fa-info-circle ml-2 text-gray-400 hover:text-gray-600"></i>
+                </span>
+            </div>
+            <div class="grid grid-cols-3 gap-2">
+                <p class="text-lg">Suma wszystkich składek ZUS:</p>
+                <p id="zus-amount" class="text-lg justify-self-end"></p>
+            </div>
+            <hr class="my-4 border-gray-300"/>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>
