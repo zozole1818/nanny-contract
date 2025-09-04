@@ -23,9 +23,13 @@ func (g Generator) NannyDRA(month time.Month, minimalWage decimal.Decimal, gross
 	countryBase := minimalWage.DivRound(decimal.NewFromInt(2), 2)
 	employerBase := grossIncome.Sub(countryBase)
 	var dra *Dra
-	if employerBase.LessThanOrEqual(decimal.Zero) {
+	if employerBase.Equal(decimal.Zero) {
 		dra = NewDra([]Rca{
 			*NewRca(month, Code043000, countryBase),
+		})
+	} else if employerBase.LessThan(decimal.Zero) {
+		dra = NewDra([]Rca{
+			*NewRca(month, Code043000, grossIncome),
 		})
 	} else {
 		dra = NewDra([]Rca{

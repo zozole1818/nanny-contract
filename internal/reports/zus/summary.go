@@ -46,10 +46,10 @@ func NewSummary(dra Dra) Summary { // todo: polish names by default - add other 
 	}
 
 	netIncome := grossIncome
-	zusEployeeFund := decimal.Zero
+	zusEmployeeFund := decimal.Zero
 	for _, v := range dra.contributionFundByEmployee {
 		netIncome = netIncome.Sub(v)
-		zusEployeeFund = zusEployeeFund.Add(v)
+		zusEmployeeFund = zusEmployeeFund.Add(v)
 	}
 
 	paidByEmployer := make(map[string]Record)
@@ -109,7 +109,7 @@ func NewSummary(dra Dra) Summary { // todo: polish names by default - add other 
 	summary.NetIncome = netIncome
 	summary.EmployerTotalCost = netIncome.Add(dra.zusPaidByEmployerSum)
 	summary.Zus = Zus{
-		EmployeeFund: zusEployeeFund,
+		EmployeeFund: zusEmployeeFund,
 		EmployerFund: zusEmployerFund,
 
 		EmployerPaid: dra.zusPaidByEmployerSum,

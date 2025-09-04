@@ -67,6 +67,9 @@ func (d *Dra) Calculated() bool {
 }
 
 func (d *Dra) Calculate() Dra {
+	if d.calculated {
+		return *d
+	}
 	fbEmployee := make(map[ContributionName]decimal.Decimal, 4)
 	fbEmployer := make(map[ContributionName]decimal.Decimal, 4)
 	fbCountry := make(map[ContributionName]decimal.Decimal, 4)

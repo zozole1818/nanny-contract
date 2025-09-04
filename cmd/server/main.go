@@ -6,12 +6,12 @@ import (
 	"fmt"
 	"github.com/shopspring/decimal"
 	"github.com/zozole1818/nanny-contract/internal/email"
+	"github.com/zozole1818/nanny-contract/internal/misc"
 	"github.com/zozole1818/nanny-contract/internal/reports"
 	"github.com/zozole1818/nanny-contract/internal/reports/model"
 	"github.com/zozole1818/nanny-contract/internal/reports/pdf"
 	"github.com/zozole1818/nanny-contract/internal/reports/view"
 	"github.com/zozole1818/nanny-contract/internal/reports/zus"
-	"gopkg.in/yaml.v3"
 	"html/template"
 	"log/slog"
 
@@ -19,7 +19,6 @@ import (
 	"os"
 	"os/signal"
 	"strconv"
-	"strings"
 	"syscall"
 	"time"
 
@@ -32,7 +31,7 @@ func main() {
 	defer cancel()
 	slog.SetLogLoggerLevel(slog.LevelDebug)
 
-	err := loadEnvs(".env")
+	err := misc.LoadEnvs(".env")
 	if err != nil {
 		slog.Error("Error when loading env file", "error", err)
 		return
@@ -191,27 +190,4 @@ func main() {
 	<-shutdownContext.Done()
 
 	slog.Info("Server shutdown complete.")
-}
-
-func loadEnvs(path string) error {
-	b, err := os.ReadFile(path)
-	if err != nil {
-		return fmt.Errorf("error when reading %s file: %v", path, err)
-	}
-	result := make(map[string]string)
-	err = yaml.Unmarshal(b, &result)
-	if err != nil {
-		return fmt.Errorf("error when Unmarshal %s file: %v", path, err)
-	}
-	var errors []string
-	for k, v := range result {
-		err = os.Setenv(k, v)
-		if err != nil {
-			errors = append(errors, fmt.Errorf("error when setting %s env var: %v", k, err).Error())
-		}
-	}
-	if len(errors) > 0 {
-		return fmt.Errorf("errors when setting env vars: %s", strings.Join(errors, ", "))
-	}
-	return nil
 }
