@@ -12,10 +12,19 @@ type Summary struct {
 	GrossIncome       decimal.Decimal
 	NetIncome         decimal.Decimal
 	EmployerTotalCost decimal.Decimal
-	ZUSAmount         decimal.Decimal
+	//ZUSAmount         decimal.Decimal
+	Zus Zus
 
 	PaidByEmployer map[string]Record
 	PaidByCountry  map[string]Record
+}
+
+type Zus struct {
+	EmployeeFund decimal.Decimal
+	EmployerFund decimal.Decimal
+
+	EmployerPaid decimal.Decimal
+	CountryPaid  decimal.Decimal
 }
 
 type Record struct {
@@ -37,8 +46,10 @@ func NewSummary(dra Dra) Summary { // todo: polish names by default - add other 
 	}
 
 	netIncome := grossIncome
+	zusEployeeFund := decimal.Zero
 	for _, v := range dra.contributionFundByEmployee {
 		netIncome = netIncome.Sub(v)
+		zusEployeeFund = zusEployeeFund.Add(v)
 	}
 
 	paidByEmployer := make(map[string]Record)
@@ -57,7 +68,9 @@ func NewSummary(dra Dra) Summary { // todo: polish names by default - add other 
 			Description: "",
 		}
 	}
+	zusEmployerFund := decimal.Zero
 	for k, v := range dra.contributionFundByEmployer {
+		zusEmployerFund = zusEmployerFund.Add(v)
 		tmp, ok := paidByEmployer[string(k)]
 		if ok {
 			key := paidByPolMap[employerPaidBy]
@@ -94,8 +107,14 @@ func NewSummary(dra Dra) Summary { // todo: polish names by default - add other 
 	summary.Name = fmt.Sprintf("Podsumowanie za miesiąc: %s", monthsPolMap[dra.SettlementPeriod.String()])
 	summary.GrossIncome = grossIncome
 	summary.NetIncome = netIncome
-	summary.ZUSAmount = dra.zusPaidByEmployerSum
 	summary.EmployerTotalCost = netIncome.Add(dra.zusPaidByEmployerSum)
+	summary.Zus = Zus{
+		EmployeeFund: zusEployeeFund,
+		EmployerFund: zusEmployerFund,
+
+		EmployerPaid: dra.zusPaidByEmployerSum,
+		CountryPaid:  dra.zusPaidByCountrySum,
+	}
 
 	return summary
 }
@@ -122,8 +141,20 @@ func (s Summary) Print() {
 		{Align: simpletable.AlignRight, Text: fmt.Sprintf("%s", s.EmployerTotalCost.StringFixed(2))},
 	})
 	table.Body.Cells = append(table.Body.Cells, []*simpletable.Cell{
+		{Align: simpletable.AlignRight, Text: fmt.Sprintf("%s", "ZUS finansowany przez nianie")},
+		{Align: simpletable.AlignRight, Text: fmt.Sprintf("%s", s.Zus.EmployeeFund.StringFixed(2))},
+	})
+	table.Body.Cells = append(table.Body.Cells, []*simpletable.Cell{
+		{Align: simpletable.AlignRight, Text: fmt.Sprintf("%s", "ZUS finansowany przez rodzica")},
+		{Align: simpletable.AlignRight, Text: fmt.Sprintf("%s", s.Zus.EmployerFund.StringFixed(2))},
+	})
+	table.Body.Cells = append(table.Body.Cells, []*simpletable.Cell{
 		{Align: simpletable.AlignRight, Text: fmt.Sprintf("%s", "kwota składek ZUS (do zapłaty przez płatnika)")},
-		{Align: simpletable.AlignRight, Text: fmt.Sprintf("%s", s.ZUSAmount.StringFixed(2))},
+		{Align: simpletable.AlignRight, Text: fmt.Sprintf("%s", s.Zus.EmployerPaid.StringFixed(2))},
+	})
+	table.Body.Cells = append(table.Body.Cells, []*simpletable.Cell{
+		{Align: simpletable.AlignRight, Text: fmt.Sprintf("%s", "kwota składek ZUS (do zapłaty przez państwo)")},
+		{Align: simpletable.AlignRight, Text: fmt.Sprintf("%s", s.Zus.CountryPaid.StringFixed(2))},
 	})
 
 	keys := make([]string, 0, len(s.PaidByEmployer))

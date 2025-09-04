@@ -110,7 +110,7 @@ func (e *Emailer) prepareEmailBody(summary zus.Summary) (string, error) {
                 </tr>
                 <tr>
                   <td>Suma wszystkich składek ZUS:</td>
-                  <td align="right"><strong>{{.Summary.ZUSAmount}} zł</strong></td>
+                  <td align="right"><strong>{{.Summary.Zus.EmployerPaid}} zł</strong></td>
                 </tr>
               </table>
 

@@ -60,30 +60,33 @@
                 <p class="text-3xl mb-2 mr-6 inline-block">Podsumowanie</p>
                 <!--                <p class="text-3xl mb-2 mr-6 inline-block">{{ .Summary.Name }}</p>-->
             </div>
-            <div class="grid grid-cols-3 gap-2">
-                <p class="text-lg">Kwota na umowie (brutto):</p>
+            <div class="grid grid-cols-6 gap-2">
+                <p class="text-lg col-span-4">Kwota na umowie (brutto):</p>
                 <p id="gross-income" class="text-lg justify-self-end">{{.Summary.GrossIncome}} zł</p>
             </div>
-            <div class="grid grid-cols-3 gap-2">
-                <p class="text-lg">Na rękę dla niani:</p>
+            <div class="grid grid-cols-6 gap-2">
+                <p class="text-lg col-span-4">Na rękę dla niani:</p>
                 <p id="net-income" class="text-lg justify-self-end">{{.Summary.NetIncome}} zł</p>
                 <span
-                        class="tooltip flex items-center"
+                        class="tooltip flex"
                         data-tooltip="Kwota brutto - suma szystkich składek opłacanych przez nianie">
               <i class="fas fa-info-circle ml-2 text-gray-400 hover:text-gray-600"></i>
             </span>
             </div>
-            <div class="grid grid-cols-3 gap-2">
-                <p class="text-lg">Całkowity koszt rodzica:</p>
+            <div class="grid grid-cols-6 gap-2">
+                <p class="text-lg col-span-4">Całkowity koszt rodzica:</p>
                 <p id="employer-total-cost" class="text-lg justify-self-end">{{.Summary.EmployerTotalCost}}
                     zł</p>
-                <span class="tooltip flex items-center" data-tooltip="Kwota wypłacona niani + wszystkie składki ZUS">
+                <span class="tooltip flex" data-tooltip="Kwota wypłacona niani + wszystkie składki ZUS">
                     <i class="fas fa-info-circle ml-2 text-gray-400 hover:text-gray-600"></i>
                 </span>
             </div>
-            <div class="grid grid-cols-3 gap-2">
-                <p class="text-lg">Suma wszystkich składek ZUS:</p>
-                <p id="zus-amount" class="text-lg justify-self-end">{{.Summary.ZUSAmount}} zł</p>
+            <div class="grid grid-cols-6 gap-2">
+                <p class="text-lg col-span-4">Suma wszystkich składek ZUS:</p>
+                <p id="zus-amount" class="text-lg justify-self-end">{{.Summary.Zus.EmployerPaid}} zł</p>
+                <span class="tooltip flex" data-tooltip="Składki niani [{{ .Summary.Zus.EmployeeFund }} zł] + składki rodzica [{{ .Summary.Zus.EmployerFund }} zł]">
+                    <i class="fas fa-info-circle ml-2 text-gray-400 hover:text-gray-600"></i>
+                </span>
             </div>
 
             <hr class="my-4 border-gray-300"/>
@@ -94,20 +97,20 @@
                 <p class="text-xl">Składki opłacane przez rodzica:</p>
                 <div id="employer-contributions">
                     {{ range $key, $value := .Summary.PaidByEmployer }}
-                    <div class="grid grid-cols-3 gap-2">
-                        <p class="text-base pl-2">{{$value.Name}}</p>
+                    <div class="grid grid-cols-6 gap-2">
+                        <p class="text-base pl-2 col-span-4">{{$value.Name}}</p>
                         <p class="text-base justify-self-end">{{$value.Value}} zł</p>
                         <span class="tooltip flex items-center"
-                              data-tooltip="tooltip-TBD zł">
+                              data-tooltip="tooltip-TBD">
                             <i class="fas fa-info-circle ml-2 text-gray-400 hover:text-gray-600"></i>
                         </span>
                     </div>
                     {{ range $key2, $value2 := $value.Records }}
-                    <div class="grid grid-cols-3 gap-2">
-                        <p class="text-sm pl-4">{{$value2.Name}}</p>
+                    <div class="grid grid-cols-6 gap-2">
+                        <p class="text-sm pl-4 col-span-4">{{$value2.Name}}</p>
                         <p class="text-sm justify-self-end">{{$value2.Value}} zł</p>
                         <span class="tooltip flex items-center"
-                              data-tooltip="tooltip-TBD zł">
+                              data-tooltip="tooltip-TBD">
                                 <i class="fas fa-info-circle ml-2 text-gray-400 hover:text-gray-600"></i>
                             </span>
                     </div>
@@ -121,8 +124,8 @@
                 <p class="text-xl">Składki opłacane przez państwo:</p>
                 <div id="country-contributions">
                     {{ range $key, $value := .Summary.PaidByCountry }}
-                    <div class="grid grid-cols-3 gap-2">
-                        <p class="text-base pl-2">{{$key}}</p>
+                    <div class="grid grid-cols-6 gap-2">
+                        <p class="text-base pl-2 col-span-4">{{$key}}</p>
                         <p class="text-base justify-self-end">{{$value.Value}} zł</p>
                         <span class="tooltip flex items-center"
                               data-tooltip="tooltip-TBD zł">
