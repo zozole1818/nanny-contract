@@ -109,7 +109,7 @@ func (d *Dra) Calculate() Dra {
 	d.pensionSum = fbEmployee[Pension].Add(fbEmployer[Pension]).Add(fbCountry[Pension])
 	d.rentalSum = fbEmployee[Rental].Add(fbEmployer[Rental]).Add(fbCountry[Rental])
 	d.sickSum = fbEmployee[Sick].Add(fbEmployer[Sick]).Add(fbCountry[Sick])
-	d.accidentSum = fbCountry[Accident].Add(fbEmployer[Accident]).Add(fbCountry[Accident])
+	d.accidentSum = fbEmployee[Accident].Add(fbEmployer[Accident]).Add(fbCountry[Accident])
 
 	for _, v := range fbEmployee {
 		d.zusPaidByEmployerSum = d.zusPaidByEmployerSum.Add(v)
