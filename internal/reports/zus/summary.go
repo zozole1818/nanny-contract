@@ -34,6 +34,11 @@ type Record struct {
 	Description string
 }
 
+var rowSeparator = []*simpletable.Cell{
+	{Align: simpletable.AlignRight, Text: "---"},
+	{Align: simpletable.AlignRight, Text: "---"},
+}
+
 func NewSummary(dra Dra) Summary { // todo: polish names by default - add other languages
 	summary := Summary{}
 	if !dra.Calculated() {
@@ -94,7 +99,8 @@ func NewSummary(dra Dra) Summary { // todo: polish names by default - add other 
 		p1Key := contributionNamePolMap[k]
 		p2Key := paidByPolMap[countryPaidBy]
 		key := p1Key + " " + p2Key
-		paidByCountry[p1Key] = Record{
+		//paidByCountry[p1Key] = Record{
+		paidByCountry[string(k)] = Record{
 			Name:        key,
 			Value:       v,
 			Description: "",
@@ -156,6 +162,7 @@ func (s Summary) Print() {
 		{Align: simpletable.AlignRight, Text: fmt.Sprintf("%s", "kwota składek ZUS (do zapłaty przez państwo)")},
 		{Align: simpletable.AlignRight, Text: fmt.Sprintf("%s", s.Zus.CountryPaid.StringFixed(2))},
 	})
+	table.Body.Cells = append(table.Body.Cells, rowSeparator)
 
 	keys := make([]string, 0, len(s.PaidByEmployer))
 	for k := range s.PaidByEmployer {
@@ -181,6 +188,7 @@ func (s Summary) Print() {
 				})
 			}
 		}
+		table.Body.Cells = append(table.Body.Cells, rowSeparator)
 	}
 
 	keys2 := make([]string, 0, len(s.PaidByCountry))
@@ -194,7 +202,7 @@ func (s Summary) Print() {
 	})
 	for _, k := range keys2 {
 		table.Body.Cells = append(table.Body.Cells, []*simpletable.Cell{
-			{Align: simpletable.AlignRight, Text: fmt.Sprintf("%s", k)},
+			{Align: simpletable.AlignRight, Text: fmt.Sprintf("%s", s.PaidByCountry[k].Name)},
 			{Align: simpletable.AlignRight, Text: fmt.Sprintf("%s", s.PaidByCountry[k].Value.StringFixed(2))},
 		})
 	}

@@ -148,6 +148,7 @@ func (d *Dra) Print() {
 	for _, rca := range d.Rcas {
 		fmt.Println("RCA")
 		rca.Print()
+		fmt.Println()
 	}
 
 	fmt.Println("DRA")
@@ -234,4 +235,5 @@ func (d *Dra) Print() {
 
 	//healthTable.SetStyle(simpletable.StyleCompactLite)
 	fmt.Println(healthTable.String())
+	fmt.Println()
 }
