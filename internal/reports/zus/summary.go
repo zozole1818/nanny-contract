@@ -103,7 +103,7 @@ func NewSummary(dra Dra) Summary { // todo: polish names by default - add other 
 		paidByCountry[string(k)] = Record{
 			Name:        key,
 			Value:       v,
-			Description: "",
+			Description: p1Key,
 		}
 	}
 

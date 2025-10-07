@@ -136,7 +136,7 @@ func (e *Emailer) prepareEmailBody(summary zus.Summary) (string, error) {
               <table width="100%" cellpadding="5" cellspacing="0" border="0">
                 {{ range $key, $value := .Summary.PaidByCountry }}
                 <tr>
-                  <td>{{$key}}</td>
+                  <td>{{$value.Description}}</td>
                   <td align="right">{{$value.Value}} zł</td>
                 </tr>
                 {{ end }}
